@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}MLB Hall of Fame Players{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="text-primary">
+            <i class="fas fa-users me-2"></i>Hall of Fame Players
+        </h2>
+        <p class="text-muted">Showing {{ total_count }} players</p>
+    </div>
+</div>
+
+<!-- Search and Filters -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" action="/players">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="search" class="form-label">Search Players</label>
+                            <input type="text" class="form-control search-box" id="search" name="search" 
+                                   value="{{ search }}" placeholder="Search by name...">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="position" class="form-label">Position</label>
+                            <select class="form-select" id="position" name="position">
+                                <option value="">All Positions</option>
+                                {% for position in positions %}
+                                <option value="{{ position }}" {% if position == position_filter %}selected{% endif %}>
+                                    {{ position }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="year" class="form-label">Induction Year</label>
+                            <select class="form-select" id="year" name="year">
+                                <option value="">All Years</option>
+                                {% for year in years %}
+                                <option value="{{ year }}" {% if year|string == year_filter %}selected{% endif %}>
+                                    {{ year }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-1"></i>Filter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Players List -->
+<div class="row">
+    <div class="col-12">
+        {% if players %}
+        <div class="row">
+            {% for player in players %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card player-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="/player/{{ player.id }}" class="text-decoration-none">
+                                {{ player.firstName }} {{ player.lastName }}
+                            </a>
+                        </h5>
+                        <div class="mb-2">
+                            {% if player.position %}
+                            <span class="badge bg-secondary me-2">{{ player.position }}</span>
+                            {% endif %}
+                            {% if player.yearInducted %}
+                            <span class="badge bg-success">{{ player.yearInducted }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-muted small">
+                            {% if player.nationality %}
+                            <div><i class="fas fa-flag me-1"></i>{{ player.nationality }}</div>
+                            {% endif %}
+                            {% if player.yearsActive %}
+                            <div><i class="fas fa-calendar me-1"></i>{{ player.yearsActive }}</div>
+                            {% endif %}
+                            {% if player.birthDay %}
+                            <div><i class="fas fa-birthday-cake me-1"></i>{{ player.birthDay }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="/player/{{ player.id }}" class="btn btn-sm btn-outline-primary w-100">
+                            <i class="fas fa-eye me-1"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <nav aria-label="Players pagination">
+            <ul class="pagination justify-content-center">
+                {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for p in range(1, total_pages + 1) %}
+                {% if p == page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ p }}</span>
+                </li>
+                {% elif p <= page + 2 and p >= page - 2 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ p }}{% if search %}&search={{ search }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">{{ p }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                
+                {% if page < total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No players found</h4>
+            <p class="text-muted">Try adjusting your search criteria or filters.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

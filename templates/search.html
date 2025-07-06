@@ -1,0 +1,191 @@
+{% extends "base.html" %} {% block title %}Search - MLB Hall of Fame Database{%
+endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <h2 class="text-primary">
+      <i class="fas fa-search me-2"></i>Search Database
+    </h2>
+    <p class="text-muted">Search for players, teams, and awards</p>
+  </div>
+</div>
+
+<!-- Search Form -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <form method="GET" action="/search">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control search-box"
+              name="q"
+              value="{{ query }}"
+              placeholder="Search for players, teams, or awards..."
+            />
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search me-1"></i>Search
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if query %}
+<!-- Search Results -->
+<div class="row">
+  <div class="col-12">
+    {% if players or teams or awards %}
+    <!-- Players Results -->
+    {% if players %}
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-users me-2"></i>Players ({{ players|length }})
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Position</th>
+                <th>Induction Year</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for player in players %}
+              <tr>
+                <td>
+                  <strong>{{ player.firstName }} {{ player.lastName }}</strong>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ player.position }}</span>
+                </td>
+                <td>
+                  {% if player.yearInducted %}
+                  <span class="badge bg-success"
+                    >{{ player.yearInducted }}</span
+                  >
+                  {% else %}
+                  <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a
+                    href="/player/{{ player.id }}"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="fas fa-eye me-1"></i>View
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Teams Results -->
+    {% if teams %}
+    <div class="card mb-4">
+      <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0">
+          <i class="fas fa-baseball-ball me-2"></i>Teams ({{ teams|length }})
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for team in teams %}
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div
+              class="d-flex justify-content-between align-items-center p-2 border rounded"
+            >
+              <span>{{ team.name }}</span>
+              <a
+                href="/team/{{ team.name }}"
+                class="btn btn-sm btn-outline-primary"
+              >
+                <i class="fas fa-eye me-1"></i>View
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Awards Results -->
+    {% if awards %}
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-medal me-2"></i>Awards ({{ awards|length }})
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for award in awards %}
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div class="d-flex align-items-center p-2 border rounded">
+              <i class="fas fa-trophy me-2 text-warning"></i>
+              <span>{{ award.name }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %} {% else %}
+    <div class="text-center py-5">
+      <i class="fas fa-search fa-3x text-muted mb-3"></i>
+      <h4 class="text-muted">No results found</h4>
+      <p class="text-muted">
+        Try different search terms or browse the database sections above.
+      </p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% else %}
+<!-- Search Tips -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Search Tips</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <h6><i class="fas fa-users me-1"></i>Search Players</h6>
+            <p class="small text-muted">
+              Search by first name, last name, or position (e.g., "Babe Ruth",
+              "pitcher")
+            </p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <h6><i class="fas fa-baseball-ball me-1"></i>Search Teams</h6>
+            <p class="small text-muted">
+              Search by team name (e.g., "Yankees", "Dodgers")
+            </p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <h6><i class="fas fa-medal me-1"></i>Search Awards</h6>
+            <p class="small text-muted">
+              Search by award name (e.g., "MVP", "All-Star")
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %} {% endblock %}

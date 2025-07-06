@@ -1,0 +1,164 @@
+{% extends "base.html" %} {% block title %}MLB Hall of Fame Database - Home{%
+endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="text-center">
+      <h1 class="display-4 fw-bold text-primary mb-3">
+        <i class="fas fa-trophy me-3"></i>
+        MLB Hall of Fame Database
+      </h1>
+      <p class="lead text-muted">
+        Explore the complete history of Major League Baseball's greatest players
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5">
+  <div class="col-md-4 mb-3">
+    <div class="card stats-card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-users fa-3x mb-3"></i>
+        <h3 class="card-title">{{ stats.total_players }}</h3>
+        <p class="card-text">Hall of Fame Members</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card stats-card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-baseball-ball fa-3x mb-3"></i>
+        <h3 class="card-title">{{ stats.total_teams }}</h3>
+        <p class="card-text">Teams Represented</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card stats-card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-medal fa-3x mb-3"></i>
+        <h3 class="card-title">{{ stats.total_awards }}</h3>
+        <p class="card-text">Awards & Honors</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-5">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Actions</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <a href="/players" class="btn btn-outline-primary w-100">
+              <i class="fas fa-users me-2"></i>Browse Players
+            </a>
+          </div>
+          <div class="col-md-3 mb-3">
+            <a href="/teams" class="btn btn-outline-primary w-100">
+              <i class="fas fa-baseball-ball me-2"></i>View Teams
+            </a>
+          </div>
+          <div class="col-md-3 mb-3">
+            <a href="/awards" class="btn btn-outline-primary w-100">
+              <i class="fas fa-medal me-2"></i>Explore Awards
+            </a>
+          </div>
+          <div class="col-md-3 mb-3">
+            <a href="/search" class="btn btn-outline-primary w-100">
+              <i class="fas fa-search me-2"></i>Search Database
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Inductees -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-star me-2"></i>Recent Hall of Fame Inductees
+        </h5>
+      </div>
+      <div class="card-body">
+        {% if stats.recent_inductees %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Position</th>
+                <th>Year Inducted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for player in stats.recent_inductees %}
+              <tr>
+                <td>
+                  <strong>{{ player.firstName }} {{ player.lastName }}</strong>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ player.position }}</span>
+                </td>
+                <td>
+                  <span class="badge bg-success"
+                    >{{ player.yearInducted }}</span
+                  >
+                </td>
+                <td>
+                  <a
+                    href="/player/{{ player.id }}"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="fas fa-eye me-1"></i>View
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center">No recent inductees found.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- About Section -->
+<div class="row mt-5">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="fas fa-info-circle me-2"></i>About This Database
+        </h5>
+        <p class="card-text">
+          This comprehensive database contains detailed information about all
+          Major League Baseball Hall of Fame members, including their career
+          statistics, teams, awards, and biographical information. The database
+          includes {{ stats.total_players }} Hall of Fame members, representing
+          {{ stats.total_teams }} different teams and {{ stats.total_awards }}
+          unique awards and honors.
+        </p>
+        <p class="card-text">
+          <strong>Data includes:</strong> Player names, positions,
+          nationalities, years active, birth/death dates, induction years, team
+          affiliations, awards, and batting/throwing hand information.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

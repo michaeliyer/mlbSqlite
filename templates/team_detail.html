@@ -1,0 +1,121 @@
+{% extends "base.html" %} {% block title %}{{ team_name }} - MLB Hall of Fame{%
+endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/teams">Teams</a></li>
+        <li class="breadcrumb-item active">{{ team_name }}</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-warning text-dark">
+        <h3 class="mb-0">
+          <i class="fas fa-baseball-ball me-2"></i>{{ team_name }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <p class="lead mb-0">
+          {{ players|length }} Hall of Fame player{{ 's' if players|length != 1
+          else '' }} have played for {{ team_name }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    {% if players %}
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-users me-2"></i>Hall of Fame Players
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Position</th>
+                <th>Induction Year</th>
+                <th>Primary Team</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for player in players %}
+              <tr>
+                <td>
+                  <strong>{{ player.firstName }} {{ player.lastName }}</strong>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ player.position }}</span>
+                </td>
+                <td>
+                  {% if player.yearInducted %}
+                  <span class="badge bg-success"
+                    >{{ player.yearInducted }}</span
+                  >
+                  {% else %}
+                  <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if player.is_primary %}
+                  <span class="badge bg-primary">Primary</span>
+                  {% else %}
+                  <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a
+                    href="/player/{{ player.id }}"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="fas fa-eye me-1"></i>View
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <i class="fas fa-users fa-3x text-muted mb-3"></i>
+      <h4 class="text-muted">No players found for this team</h4>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="d-flex justify-content-between">
+      <a href="/teams" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Teams
+      </a>
+      <div>
+        <a href="/players" class="btn btn-outline-secondary me-2">
+          <i class="fas fa-users me-1"></i>All Players
+        </a>
+        <a href="/" class="btn btn-outline-primary">
+          <i class="fas fa-home me-1"></i>Home
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

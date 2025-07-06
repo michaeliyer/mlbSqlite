@@ -1,0 +1,204 @@
+{% extends "base.html" %} {% block title %}{{ player.firstName }} {{
+player.lastName }} - MLB Hall of Fame{% endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/players">Players</a></li>
+        <li class="breadcrumb-item active">
+          {{ player.firstName }} {{ player.lastName }}
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Player Info -->
+  <div class="col-lg-8">
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">
+          <i class="fas fa-user me-2"></i>{{ player.firstName }} {{
+          player.lastName }}
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="text-primary">Basic Information</h5>
+            <table class="table table-borderless">
+              <tbody>
+                {% if player.realName %}
+                <tr>
+                  <td><strong>Full Name:</strong></td>
+                  <td>{{ player.realName }}</td>
+                </tr>
+                {% endif %} {% if player.position %}
+                <tr>
+                  <td><strong>Position:</strong></td>
+                  <td>
+                    <span class="badge bg-secondary"
+                      >{{ player.position }}</span
+                    >
+                  </td>
+                </tr>
+                {% endif %} {% if player.nationality %}
+                <tr>
+                  <td><strong>Nationality:</strong></td>
+                  <td>
+                    <i class="fas fa-flag me-1"></i>{{ player.nationality }}
+                  </td>
+                </tr>
+                {% endif %} {% if player.race %}
+                <tr>
+                  <td><strong>Race/Ethnicity:</strong></td>
+                  <td>{{ player.race }}</td>
+                </tr>
+                {% endif %} {% if player.yearsActive %}
+                <tr>
+                  <td><strong>Years Active:</strong></td>
+                  <td>
+                    <i class="fas fa-calendar me-1"></i>{{ player.yearsActive }}
+                  </td>
+                </tr>
+                {% endif %} {% if player.yearInducted %}
+                <tr>
+                  <td><strong>Hall of Fame:</strong></td>
+                  <td>
+                    <span class="badge bg-success"
+                      >{{ player.yearInducted }}</span
+                    >
+                  </td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <h5 class="text-primary">Personal Information</h5>
+            <table class="table table-borderless">
+              <tbody>
+                {% if player.birthDay %}
+                <tr>
+                  <td><strong>Birth Date:</strong></td>
+                  <td>
+                    <i class="fas fa-birthday-cake me-1"></i>{{ player.birthDay
+                    }}
+                  </td>
+                </tr>
+                {% endif %} {% if player.deathDay %}
+                <tr>
+                  <td><strong>Death Date:</strong></td>
+                  <td>
+                    <i class="fas fa-cross me-1"></i>{{ player.deathDay }}
+                  </td>
+                </tr>
+                {% endif %} {% if hands %} {% if hands.bat_hand %}
+                <tr>
+                  <td><strong>Batting Hand:</strong></td>
+                  <td>
+                    <i class="fas fa-hand-paper me-1"></i>{{ hands.bat_hand }}
+                  </td>
+                </tr>
+                {% endif %} {% if hands.throw_hand %}
+                <tr>
+                  <td><strong>Throwing Hand:</strong></td>
+                  <td>
+                    <i class="fas fa-hand-rock me-1"></i>{{ hands.throw_hand }}
+                  </td>
+                </tr>
+                {% endif %} {% endif %} {% if player.nickNames %}
+                <tr>
+                  <td><strong>Nicknames:</strong></td>
+                  <td><i class="fas fa-tag me-1"></i>{{ player.nickNames }}</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {% if player.commentOne or player.commentTwo %}
+        <div class="mt-4">
+          <h5 class="text-primary">Additional Information</h5>
+          {% if player.commentOne %}
+          <p class="mb-2"><strong>Note:</strong> {{ player.commentOne }}</p>
+          {% endif %} {% if player.commentTwo %}
+          <p class="mb-0">
+            <strong>Additional:</strong> {{ player.commentTwo }}
+          </p>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="col-lg-4">
+    <!-- Teams -->
+    {% if teams %}
+    <div class="card mb-4">
+      <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="fas fa-baseball-ball me-2"></i>Teams</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for team in teams %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <a href="/team/{{ team.name }}" class="text-decoration-none">
+              {{ team.name }}
+            </a>
+            {% if team.is_primary %}
+            <span class="badge bg-primary">Primary</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Awards -->
+    {% if awards %}
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="fas fa-medal me-2"></i>Awards & Honors</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for award in awards %}
+          <li class="list-group-item">
+            <i class="fas fa-trophy me-2 text-warning"></i>{{ award.name }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="d-flex justify-content-between">
+      <a href="/players" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Players
+      </a>
+      <div>
+        <a href="/search" class="btn btn-outline-secondary me-2">
+          <i class="fas fa-search me-1"></i>Search
+        </a>
+        <a href="/" class="btn btn-outline-primary">
+          <i class="fas fa-home me-1"></i>Home
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
