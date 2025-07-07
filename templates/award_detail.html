@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}{{ award_name }} Recipients{%
+endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/awards">Awards</a></li>
+        <li class="breadcrumb-item active">{{ award_name }}</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <h3 class="mb-0"><i class="fas fa-trophy me-2"></i>{{ award_name }}</h3>
+      </div>
+      <div class="card-body">
+        {% if players %}
+        <ul class="list-group list-group-flush">
+          {% for player in players %}
+          <li class="list-group-item">
+            <a href="/player/{{ player.id }}"
+              >{{ player.firstName }} {{ player.lastName }}</a
+            >
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">No players found for this award.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

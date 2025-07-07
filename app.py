@@ -307,6 +307,25 @@ def api_players():
     
     return jsonify([dict(player) for player in players])
 
+@app.route('/award/<award_name>')
+def award_detail(award_name):
+    conn = get_db_connection()
+    cursor = conn.execute('SELECT id FROM awards WHERE name = ?', (award_name,))
+    award = cursor.fetchone()
+    if not award:
+        conn.close()
+        return f"Award '{award_name}' not found", 404
+    cursor = conn.execute('''
+        SELECT h.id, h.firstName, h.lastName
+        FROM hof_members h
+        JOIN player_awards pa ON h.id = pa.player_id
+        WHERE pa.award_id = ?
+        ORDER BY h.lastName, h.firstName
+    ''', (award['id'],))
+    players = cursor.fetchall()
+    conn.close()
+    return render_template('award_detail.html', award_name=award_name, players=players)
+
 def run_server():
     """Run the Flask application"""
     app.run(host='0.0.0.0', port=8000, debug=True)

@@ -18,8 +18,11 @@ endblock %} {% block content %}
         <div class="card award-card h-100">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fas fa-trophy me-2 text-warning"></i>
-              {{ award.name }}
+              <a
+                href="/award/{{ award.name|urlencode }}"
+                class="text-decoration-none"
+                >{{ award.name }}</a
+              >
             </h5>
             <div class="text-muted">
               <i class="fas fa-users me-1"></i>
