@@ -66,7 +66,7 @@ def players():
     # Build query with filters
     query = '''
         SELECT id, firstName, lastName, position, nationality, 
-               yearInducted, yearsActive, birthDay, deathDay
+               yearInducted, yearsActive, birthDay, deathDay, photoUrl
         FROM hof_members 
         WHERE 1=1
     '''
@@ -316,7 +316,7 @@ def award_detail(award_name):
         conn.close()
         return f"Award '{award_name}' not found", 404
     cursor = conn.execute('''
-        SELECT h.id, h.firstName, h.lastName
+        SELECT h.id, h.firstName, h.lastName, h.photoUrl
         FROM hof_members h
         JOIN player_awards pa ON h.id = pa.player_id
         WHERE pa.award_id = ?

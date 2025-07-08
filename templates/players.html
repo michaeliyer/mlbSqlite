@@ -69,8 +69,9 @@
             {% for player in players %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card player-card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
+                    <div class="card-body text-center">
+                        <img src="{{ player.photoUrl or ('https://ui-avatars.com/api/?name=' ~ player.firstName ~ '+' ~ player.lastName ~ '&background=1e3a8a&color=fff&size=128') }}" alt="{{ player.firstName }} {{ player.lastName }}" class="rounded-circle mb-2" style="width:64px;height:64px;object-fit:cover;">
+                        <h5 class="card-title mt-2">
                             <a href="/player/{{ player.id }}" class="text-decoration-none">
                                 {{ player.firstName }} {{ player.lastName }}
                             </a>

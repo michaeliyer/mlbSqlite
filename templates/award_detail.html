@@ -21,7 +21,13 @@ endblock %} {% block content %}
         {% if players %}
         <ul class="list-group list-group-flush">
           {% for player in players %}
-          <li class="list-group-item">
+          <li class="list-group-item d-flex align-items-center">
+            <img
+              src="{{ player.photoUrl or ('https://ui-avatars.com/api/?name=' ~ player.firstName ~ '+' ~ player.lastName ~ '&background=1e3a8a&color=fff&size=48') }}"
+              alt="{{ player.firstName }} {{ player.lastName }}"
+              class="rounded-circle me-3"
+              style="width: 32px; height: 32px; object-fit: cover"
+            />
             <a href="/player/{{ player.id }}"
               >{{ player.firstName }} {{ player.lastName }}</a
             >
