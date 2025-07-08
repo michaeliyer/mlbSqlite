@@ -326,10 +326,6 @@ def award_detail(award_name):
     conn.close()
     return render_template('award_detail.html', award_name=award_name, players=players)
 
-def run_server():
-    """Run the Flask application"""
-    app.run(host='0.0.0.0', port=8000, debug=True)
-
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 8000))
