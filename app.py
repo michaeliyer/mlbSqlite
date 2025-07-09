@@ -60,13 +60,15 @@ def players():
     search = request.args.get('search', '')
     position_filter = request.args.get('position', '')
     year_filter = request.args.get('year', '')
+    race_filter = request.args.get('race', '')
+    nationality_filter = request.args.get('nationality', '')
     
     conn = get_db_connection()
     
     # Build query with filters
     query = '''
         SELECT id, firstName, lastName, position, nationality, 
-               yearInducted, yearsActive, birthDay, deathDay, photoUrl
+               yearInducted, yearsActive, birthDay, deathDay, photoUrl, race
         FROM hof_members 
         WHERE 1=1
     '''
@@ -85,6 +87,14 @@ def players():
         query += ' AND yearInducted = ?'
         params.append(year_filter)
     
+    if race_filter:
+        query += ' AND race = ?'
+        params.append(race_filter)
+    
+    if nationality_filter:
+        query += ' AND nationality = ?'
+        params.append(nationality_filter)
+    
     # Get total count - use a simpler approach
     count_params = []
     count_where = []
@@ -101,6 +111,14 @@ def players():
     if year_filter:
         count_where.append('yearInducted = ?')
         count_params.append(year_filter)
+    
+    if race_filter:
+        count_where.append('race = ?')
+        count_params.append(race_filter)
+    
+    if nationality_filter:
+        count_where.append('nationality = ?')
+        count_params.append(nationality_filter)
     
     where_clause = ' AND '.join(count_where) if count_where else '1=1'
     count_query = f'SELECT COUNT(*) as count FROM hof_members WHERE {where_clause}'
@@ -123,6 +141,14 @@ def players():
     # Get unique years for filter dropdown
     cursor = conn.execute('SELECT DISTINCT yearInducted FROM hof_members WHERE yearInducted IS NOT NULL ORDER BY yearInducted DESC')
     years = [row['yearInducted'] for row in cursor.fetchall()]
+
+    # Get unique race for filter dropdown
+    cursor = conn.execute('SELECT DISTINCT race FROM hof_members WHERE race IS NOT NULL AND race != "" ORDER BY race')
+    races = [row['race'] for row in cursor.fetchall()]
+
+    # Get unique nationality for filter dropdown
+    cursor = conn.execute('SELECT DISTINCT nationality FROM hof_members WHERE nationality IS NOT NULL AND nationality != "" ORDER BY nationality')
+    nationalities = [row['nationality'] for row in cursor.fetchall()]
     
     conn.close()
     
@@ -137,7 +163,11 @@ def players():
                          position_filter=position_filter,
                          year_filter=year_filter,
                          positions=positions,
-                         years=years)
+                         years=years,
+                         races=races,
+                         race_filter=race_filter,
+                         nationalities=nationalities,
+                         nationality_filter=nationality_filter)
 
 @app.route('/player/<int:player_id>')
 def player_detail(player_id):
